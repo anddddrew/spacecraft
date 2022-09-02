@@ -4,7 +4,7 @@ import { FileExplorer } from '../components/file-export';
 
 const Home: NextPage = () => {
     return (
-        <div className="flex">
+        <div className="flex bg-black">
             <FileExplorer />
             <CodeEditor />
         </div>

@@ -39,7 +39,7 @@ const fsAtom = atom<Folder>({
                     files: [
                         {
                             name: 'very-cool.scss',
-                            path: '/src/cool-things/index.tsx',
+                            path: '/src/cool-things/very-cool.scss',
                         },
                         {
                             name: 'also-cool.tsx',

@@ -14,9 +14,10 @@ const useFileEditorAndFile = () => {
 
 export function CodeEditor() {
     const { currentFile, editorContent } = useFileEditorAndFile();
+
     return (
         <div className="flex flex-col w-full text-white">
-            <div className="flex h-[4vh] px-4 py-2">
+            <div className="flex h-[4vh] px-4 py-2 border-white/25 border-b">
                 {currentFile && (
                     <>
                         <FileIcon name={currentFile?.name} /> {currentFile?.name}
@@ -26,8 +27,8 @@ export function CodeEditor() {
 
             <Editor
                 height="100%"
-                defaultLanguage="javascript"
-                defaultValue={editorContent}
+                defaultValue={editorContent ?? ''}
+                path={currentFile?.path}
                 options={{
                     theme: 'hc-black',
                 }}
