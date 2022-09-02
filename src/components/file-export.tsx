@@ -1,13 +1,10 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import clsx from 'clsx';
 import { atom, useAtom } from 'jotai';
+import { currentFileAtom } from '../atoms';
 import { Button } from '../ds/button';
-
-type File = {
-    name: string;
-    path: string;
-};
-
-type Folder = { path: string; name: string; folders?: Folder[]; open: boolean; files?: File[] };
+import { File, Folder } from '../types/fs';
+import { FileIcon, FolderLogo } from './icons';
 
 const fsAtom = atom<Folder>({
     name: 'root',
@@ -42,11 +39,11 @@ const fsAtom = atom<Folder>({
                     files: [
                         {
                             name: 'very-cool.scss',
-                            path: '/src/index.tsx',
+                            path: '/src/cool-things/index.tsx',
                         },
                         {
                             name: 'also-cool.tsx',
-                            path: '/src/button.tsx',
+                            path: '/src/cool-things/button.tsx',
                         },
                     ],
                 },
@@ -55,45 +52,18 @@ const fsAtom = atom<Folder>({
     ],
 });
 
-const Icon = ({ src }: { src: string }) => (
-    <picture className="flex">
-        <img src={'/icons/' + src + '.svg'} alt="" className="aspect-square w-4 mr-2 my-auto" />
-    </picture>
-);
+const File = (file: File) => {
+    const [currentFile, setCurrentFileAtom] = useAtom(currentFileAtom);
+    const isCurrentFileClass = currentFile?.path === file.path ? 'bg-black text-white' : '  hover:bg-black/[.05] dark:hover:bg-white/[.05]';
 
-const fileIcons: Record<string, string> = {
-    md: 'markdown',
-    tsx: 'react_ts',
-    jsx: 'react',
-    scss: 'sass',
-};
-const folderIcons: Record<string, string> = {
-    src: 'folder-src',
-};
-
-const FolderLogo = ({ name, open }: { name: string; open?: boolean }) => {
-    let iconName = folderIcons[name] ?? 'folder';
-
-    if (open) {
-        iconName = iconName + '-open';
-    }
-
-    return <Icon src={iconName} />;
-};
-
-const FileIcon = ({ name }: { name: string }) => {
-    const fileExt = name.split('.').pop();
-    const fileIcon = fileIcons[fileExt ?? ''] ?? 'file';
-
-    return <Icon src={fileIcon} />;
-};
-
-const File = ({ name }: File) => {
     return (
-        <Button className="flex w-full px-2 py-1 text-sm">
-            <FileIcon name={name} />
-            {name}
-        </Button>
+        <button
+            className={clsx('flex w-full px-2 py-1 text-sm cursor-pointer select-none transition-colors', isCurrentFileClass)}
+            onClick={() => setCurrentFileAtom(() => file)}
+        >
+            <FileIcon name={file.name} />
+            {file.name}
+        </button>
     );
 };
 
@@ -154,7 +124,7 @@ export function FileExplorer() {
     const [fs] = useAtom(fsAtom);
 
     return (
-        <div className="h-screen w-80 bg-stone-900 border-white/25 border-r text-white font-mono py-6 px-2">
+        <div className="h-screen min-w-80 w-80 bg-stone-900 border-white/25 border-r text-white text-xs font-mono py-6 px-2">
             <Folder folder={fs} hideName={true} pathToFolder="" />
         </div>
     );

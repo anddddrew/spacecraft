@@ -3,7 +3,7 @@ import { Head, Html, Main, NextScript } from 'next/document';
 export default function document() {
     return (
         <Html>
-            <title>Space ship 🧨 {'->'} 🚀</title>
+            <title>{'Space ship 🧨  ->  🚀'}</title>
             <Head>
                 <meta name="description" content="To space!... i guess" />
                 <link rel="icon" href="/favicon.ico" />
