@@ -16,6 +16,14 @@ const fsAtom = atom<Folder>({
             name: 'README.md',
             path: '/readme.md',
         },
+        {
+            name: 'cover.png',
+            path: '/cover.png',
+        },
+        {
+            name: 'LICENSE.txt',
+            path: '/LICENSE.txt',
+        },
     ],
     folders: [
         {
@@ -95,7 +103,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
         });
     };
 
-    const containerClassName = (folder.open && folder.files?.length) || folder.folders?.length ? 'border-l border-white/[.15]' : '';
+    const containerClassName = !hideName && ((folder.open && folder.files?.length) || folder.folders?.length) ? 'border-l border-white/[.15]' : '';
 
     return (
         <div className={containerClassName}>
