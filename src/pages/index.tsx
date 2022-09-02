@@ -1,16 +1,12 @@
 import type { NextPage } from 'next';
-import { trpc } from '../utils/trpc';
-
-type TechnologyCardProps = {
-    name: string;
-    description: string;
-    documentation: string;
-};
+import { FileExplorer } from '../components/file-export';
 
 const Home: NextPage = () => {
-    const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-
-    return <></>;
+    return (
+        <>
+            <FileExplorer></FileExplorer>
+        </>
+    );
 };
 
 export default Home;
