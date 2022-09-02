@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 * {
-    font-family: 'Fira Mono', monospace;
+    font-family: 'Fira Code', monospace;
 }

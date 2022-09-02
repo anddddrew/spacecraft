@@ -1,5 +1,5 @@
 import { FileIcon } from '@/components/icons';
-import '@fontsource/fira-mono';
+import '@fontsource/fira-code';
 import Editor from '@monaco-editor/react';
 import { atom, useAtom } from 'jotai';
 import { currentFileAtom, showTerminalAtom } from '../atoms';
