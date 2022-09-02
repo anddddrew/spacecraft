@@ -1,4 +1,4 @@
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { Button } from '../ds/button';
 
 type File = {
@@ -10,7 +10,7 @@ type Folder = { path: string; name: string; folders?: Folder[]; open: boolean; f
 
 const useFs = (): Folder => {
     return {
-        name: '/',
+        name: 'root',
         path: '/',
         open: true,
         files: [
@@ -22,7 +22,7 @@ const useFs = (): Folder => {
         folders: [
             {
                 name: 'src',
-                open: false,
+                open: true,
                 path: '/src',
                 files: [
                     {
@@ -43,6 +43,8 @@ const Icon = ({ src }: { src: string }) => (
 
 const fileIcons: Record<string, string> = {
     md: 'markdown',
+    tsx: 'react_ts',
+    jsx: 'react',
 };
 const folderIcons: Record<string, string> = {
     src: 'folder-src',
@@ -68,20 +70,31 @@ const FileIcon = ({ name }: { name: string }) => {
 
 const File = ({ name }: File) => {
     return (
-        <Button className="flex w-full px-4 py-1 text-sm">
+        <Button className="flex w-full px-2 py-1 text-sm">
             <FileIcon name={name} />
             {name}
         </Button>
     );
 };
 
-const Folder = ({ name }: File) => {
+const Folder = ({ folder, hideName }: { folder: Folder; hideName?: boolean }) => {
     return (
-        <Button className="flex w-full px-4 py-1 text-sm">
-            <ChevronRightIcon className="mr-1" />
-            <FolderLogo name={name} />
-            {name}
-        </Button>
+        <>
+            {!hideName && (
+                <Button className="flex py-1 text-sm">
+                    {!folder.open && <ChevronRightIcon className="mr-1" />}
+                    {folder.open && <ChevronDownIcon className="mr-1" />}
+                    <FolderLogo name={folder.name} />
+                    {folder.name}
+                </Button>
+            )}
+            <div className="pl-2">
+                {folder.open && folder.folders?.map((file) => <Folder key={file.path} folder={file} />)}
+                {folder.files?.map((file) => (
+                    <File key={file.path} {...file} />
+                ))}
+            </div>
+        </>
     );
 };
 
@@ -89,9 +102,8 @@ export function FileExplorer() {
     const fs = useFs();
 
     return (
-        <div className="h-screen w-80 bg-stone-900 border-white/25  border-r text-white font-mono py-6">
-            {fs.folders?.length && fs.folders.map((file) => <Folder key={file.path} {...file} />)}
-            {fs.files?.length && fs.files.map((file) => <File key={file.path} {...file} />)}
+        <div className="h-screen w-80 bg-stone-900 border-white/25 border-r text-white font-mono py-6 px-2">
+            <Folder folder={fs} hideName={true} />
         </div>
     );
 }
