@@ -72,13 +72,13 @@ const folderIcons: Record<string, string> = {
 };
 
 const FolderLogo = ({ name, open }: { name: string; open?: boolean }) => {
-    let iconName = folderIcons[name];
+    let iconName = folderIcons[name] ?? 'folder';
 
-    if (!open) {
+    if (open) {
         iconName = iconName + '-open';
     }
 
-    return <Icon src={iconName ?? 'folder'} />;
+    return <Icon src={iconName} />;
 };
 
 const FileIcon = ({ name }: { name: string }) => {
@@ -124,13 +124,15 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
         });
     };
 
+    const containerClassName = (folder.open && folder.files?.length) || folder.folders?.length ? 'border-l border-white/[.15]' : '';
+
     return (
-        <>
+        <div className={containerClassName}>
             {!hideName && (
-                <Button className="flex py-1 text-sm" onClick={toggleFolder}>
+                <Button className="flex py-1 text-sm w-full" onClick={toggleFolder}>
                     {!folder.open && <ChevronRightIcon className="mr-1" />}
                     {folder.open && <ChevronDownIcon className="mr-1" />}
-                    <FolderLogo name={folder.name} />
+                    <FolderLogo name={folder.name} open={folder.open} />
                     {folder.name}
                 </Button>
             )}
@@ -144,7 +146,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
                     ))}
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
