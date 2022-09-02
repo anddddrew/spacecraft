@@ -124,7 +124,7 @@ export function FileExplorer() {
     const [fs] = useAtom(fsAtom);
 
     return (
-        <div className="h-screen min-w-80 w-80 bg-stone-900 border-white/25 border-r text-white text-xs font-mono py-6 px-2">
+        <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono py-6 px-2">
             <Folder folder={fs} hideName={true} pathToFolder="" />
         </div>
     );
