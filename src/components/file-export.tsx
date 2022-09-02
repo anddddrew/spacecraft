@@ -111,7 +111,7 @@ function findFolder(path: string, folder: Folder): Folder | undefined {
 }
 
 const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?: boolean; pathToFolder: string }) => {
-    const [fs, setFs] = useAtom(fsAtom);
+    const [, setFs] = useAtom(fsAtom);
 
     const toggleFolder = () => {
         setFs((prev) => {
