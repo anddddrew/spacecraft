@@ -1,6 +1,7 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import { atom, useAtom } from 'jotai';
+import Image from 'next/image';
 import { currentFileAtom } from '../atoms';
 import { Button } from '../ds/button';
 import { File, Folder } from '../types/fs';
@@ -124,8 +125,16 @@ export function FileExplorer() {
     const [fs] = useAtom(fsAtom);
 
     return (
-        <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono py-6 px-2">
-            <Folder folder={fs} hideName={true} pathToFolder="" />
+        <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono">
+            <div className="flex  border-white/25 border-b mt-3 pb-3 px-3">
+                <div className="w-4 aspect-square relative mr-2">
+                    <Image src="/logo.svg" alt="" layout="fill"></Image>
+                </div>
+                SpaceShip
+            </div>
+            <div className=" px-2">
+                <Folder folder={fs} hideName={true} pathToFolder="" />
+            </div>
         </div>
     );
 }
