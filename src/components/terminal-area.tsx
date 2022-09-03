@@ -7,7 +7,7 @@ import { useTerminal } from '../hooks/use-term';
 
 enum DbType {
     Postgres = 'postgres',
-    Mysql = 'mysql',
+    Redis = 'redis',
 }
 
 type DbInfo = {
@@ -20,18 +20,47 @@ const openClass = `border-[E8198B] border-b-2`;
 const closedClass = 'border-black border-b-2';
 
 const DbSetup = () => {
-    return <div className="flex flex-col w-full h-full">Setup db </div>;
+    const [, setDbInfo] = useAtom(dbInfoAtom);
+    const selectDb = (type: DbType) => () => setDbInfo({ type });
+
+    return (
+        <div className="w-full h-full grid place-content-center">
+            <div className="mb-4">Chose a database type:</div>
+
+            <Button className="flex justify-center py-2 m-auto rounded-lg px-2" onClick={selectDb(DbType.Redis)}>
+                <picture className="my-auto mr-2 w-4 aspect-square">
+                    <img src="/redis.svg" alt="redis logo" />
+                </picture>
+                Redis
+            </Button>
+            <Button className="flex justify-center py-2 m-auto rounded-lg px-2" onClick={selectDb(DbType.Redis)}>
+                <picture className="my-auto mr-2 w-4 aspect-square">
+                    <img src="/postgres.png" alt="redis logo" />
+                </picture>
+                postgres
+            </Button>
+        </div>
+    );
 };
 
+const DbTerm = () => {
+    useTerminal('db-term');
+    return <div id="db-term"></div>;
+};
 const DatabaseArea = () => {
     const [dbInfo] = useAtom(dbInfoAtom);
 
-    return <div className="absolute w-full h-[calc(100%-36px)] bg-zinc-900 z-10"></div>;
+    return (
+        <div className="absolute w-full h-[calc(100%-36px)] bg-zinc-900 z-10">
+            {!dbInfo && <DbSetup />}
+            {dbInfo && <DbTerm />}
+        </div>
+    );
 };
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    useTerminal();
+    useTerminal('terminal');
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
