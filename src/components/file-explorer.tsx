@@ -4,14 +4,14 @@ import { atom, useAtom } from 'jotai';
 import Image from 'next/image';
 import { currentFileAtom } from '../atoms';
 import { Button } from '../ds/button';
-import { File, Folder } from '../types/fs';
+import { Folder } from '../types/fs';
 import { FileIcon, FolderLogo } from './icons';
 
 const fsAtom = atom<Folder>({
     name: 'root',
     path: '/',
     open: true,
-    files: [
+    children: [
         {
             name: 'README.md',
             path: '/readme.md',
@@ -24,13 +24,11 @@ const fsAtom = atom<Folder>({
             name: 'LICENSE.txt',
             path: '/LICENSE.txt',
         },
-    ],
-    folders: [
         {
             name: 'src',
             open: true,
             path: '/src',
-            files: [
+            children: [
                 {
                     name: 'index.tsx',
                     path: '/src/index.tsx',
@@ -39,13 +37,11 @@ const fsAtom = atom<Folder>({
                     name: 'button.tsx',
                     path: '/src/button.tsx',
                 },
-            ],
-            folders: [
                 {
                     name: 'cool-things',
                     open: true,
                     path: '/src/cool-things',
-                    files: [
+                    children: [
                         {
                             name: 'very-cool.scss',
                             path: '/src/cool-things/very-cool.scss',
@@ -61,7 +57,7 @@ const fsAtom = atom<Folder>({
     ],
 });
 
-const File = (file: File) => {
+const File = (file: Folder) => {
     const [currentFile, setCurrentFileAtom] = useAtom(currentFileAtom);
     const isCurrentFileClass = currentFile?.path === file.path ? 'bg-black text-white' : '  hover:bg-black/[.05] dark:hover:bg-white/[.05]';
 
@@ -78,9 +74,9 @@ const File = (file: File) => {
 
 function findFolder(path: string, folder: Folder): Folder | undefined {
     if (folder.path === path) {
-        return folder;
+        return folder as Folder;
     } else {
-        for (const subFolder of folder.folders ?? []) {
+        for (const subFolder of folder.children ?? []) {
             const foundFolder = findFolder(path, subFolder);
             if (foundFolder) {
                 return foundFolder;
@@ -93,7 +89,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
     const [, setFs] = useAtom(fsAtom);
 
     const toggleFolder = () => {
-        setFs((prev) => {
+        setFs((prev: Folder) => {
             const newFs = { ...prev };
             const currentFolder = findFolder(folder.path, newFs);
             if (currentFolder) {
@@ -103,7 +99,10 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
         });
     };
 
-    const containerClassName = !hideName && ((folder.open && folder.files?.length) || folder.folders?.length) ? 'border-l border-white/[.15]' : '';
+    const containerClassName = !hideName && folder.open && folder.children?.length ? 'border-l border-white/[.15]' : '';
+
+    const folders = folder.children?.filter((file) => !!file.children);
+    const files = folder.children?.filter((file) => !file.children);
 
     return (
         <div className={containerClassName}>
@@ -117,10 +116,10 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
             )}
             {folder.open && (
                 <div className="pl-2">
-                    {folder.folders?.map((file) => (
+                    {folders?.map((file) => (
                         <Folder key={file.path} folder={file} pathToFolder={pathToFolder + '.' + file.name} />
                     ))}
-                    {folder.files?.map((file) => (
+                    {files?.map((file) => (
                         <File key={file.path} {...file} />
                     ))}
                 </div>

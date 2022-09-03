@@ -1,6 +1,1 @@
-export type File = {
-    name: string;
-    path: string;
-};
-
-export type Folder = { path: string; name: string; folders?: Folder[]; open: boolean; files?: File[] };
+export type Folder = { path: string; name: string; open?: boolean; children?: Folder[] };
