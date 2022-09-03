@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { File, Folder } from './types/fs';
+import { Folder } from './types/fs';
 
 export enum CurrentTab {
     terminal = 'terminal',
