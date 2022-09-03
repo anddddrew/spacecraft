@@ -55,9 +55,38 @@ const useUpdateFile = () => {
     }, [ws, , m]);
 };
 
+const saveFile = (ws: WebSocket, m: any, currentFile: any) => {
+    const file = {
+        path: currentFile.path,
+        content: m?.editor
+            .getModels()
+            .find((x: any) => x.uri.path === currentFile.path)
+            ?.getValue(),
+    };
+    ws.send(JSON.stringify({ type: 'fileSave', data: JSON.stringify(file) }));
+};
+
 export function CodeEditor() {
     const { currentFile } = useFileEditorAndFile();
     useUpdateFile();
+    const ws = useWs();
+    const m = useMonaco();
+
+    useEffect(() => {
+        if (ws && currentFile) {
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.keyCode == 83 && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+                    e.preventDefault();
+                    saveFile(ws, m, currentFile);
+                }
+            };
+            document.addEventListener('keydown', handleKeyDown, false);
+
+            return () => document.removeEventListener('keydown', handleKeyDown, false);
+        }
+        // add a save file keybind
+    }, [m]);
+
     return (
         <div className="w-full text-white h-screen">
             <div className="flex border-white/25 border-b w-full justify-between">
