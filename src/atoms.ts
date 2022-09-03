@@ -7,7 +7,7 @@ export enum CurrentTab {
 }
 
 export const currentTermTabAtom = atom<CurrentTab>(CurrentTab.terminal);
-export const currentFileAtom = atom<File | undefined>(undefined);
+export const currentFileAtom = atom<Folder | undefined>(undefined);
 
 export const fsAtom = atom<Folder>({
     name: 'root',
