@@ -10,6 +10,11 @@ enum DbType {
     Redis = 'redis',
 }
 
+const dbCommand: Record<string, string> = {
+    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116\n',
+    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway\n',
+};
+
 type DbInfo = {
     type: DbType;
 };
@@ -33,7 +38,7 @@ const DbSetup = () => {
                 </picture>
                 Redis
             </Button>
-            <Button className="flex justify-center py-2 m-auto rounded-lg px-2" onClick={selectDb(DbType.Redis)}>
+            <Button className="flex justify-center py-2 m-auto rounded-lg px-2" onClick={selectDb(DbType.Postgres)}>
                 <picture className="my-auto mr-2 w-4 aspect-square">
                     <img src="/postgres.png" alt="redis logo" />
                 </picture>
@@ -44,7 +49,10 @@ const DbSetup = () => {
 };
 
 const DbTerm = () => {
-    useTerminal('db-term');
+    const [dbInfo] = useAtom(dbInfoAtom);
+
+    useTerminal('db-term', 'wss://database-h-production.up.railway.app/', dbCommand[dbInfo?.type ?? '']);
+
     return <div id="db-term"></div>;
 };
 const DatabaseArea = () => {
@@ -60,7 +68,7 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    useTerminal('terminal');
+    useTerminal('terminal', 'wss://h-production.up.railway.app/', '\n');
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
