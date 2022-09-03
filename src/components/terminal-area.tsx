@@ -68,7 +68,7 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    useTerminal('terminal', 'wss://h-production.up.railway.app/', '\n');
+    useTerminal('terminal', 'wss://h-production.up.railway.app/', '\r');
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
