@@ -4,6 +4,7 @@ import Editor from '@monaco-editor/react';
 import { atom, useAtom } from 'jotai';
 import dynamic from 'next/dynamic';
 import { currentFileAtom } from '../atoms';
+import { Deploy } from './deploy';
 
 const content = `
 import * as trpc from "@trpc/server";
@@ -57,8 +58,11 @@ export function CodeEditor() {
 
     return (
         <div className="flex flex-col w-full text-white max-h-screen">
-            <div className="flex  px-4 py-2 border-white/25 border-b">
-                {currentFile && <FileIcon name={currentFile?.name} />} <div className="my-auto">{currentFile?.name ?? '​'} </div>
+            <div className="flex  border-white/25 border-b w-full justify-between">
+                <div className="flex px-4 py-2">
+                    {currentFile && <FileIcon name={currentFile?.name} />} <div className="my-auto">{currentFile?.name ?? '​'} </div>
+                </div>
+                <Deploy />
             </div>
 
             <Editor
