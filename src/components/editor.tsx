@@ -2,8 +2,8 @@ import { FileIcon } from '@/components/icons';
 import '@fontsource/fira-code';
 import Editor from '@monaco-editor/react';
 import { atom, useAtom } from 'jotai';
+import dynamic from 'next/dynamic';
 import { currentFileAtom, showTerminalAtom } from '../atoms';
-import dynamic from "next/dynamic"
 
 const content = `
 import * as trpc from "@trpc/server";
@@ -50,11 +50,11 @@ const useFileEditorAndFile = () => {
 };
 
 const DynamicTerminal = dynamic(() => import('../components/terminal-area'), {
-  ssr: false,
-})
+    ssr: false,
+});
 
 export function CodeEditor() {
-    const { currentFile, editorContent, showTerminal } = useFileEditorAndFile();
+    const { currentFile, showTerminal } = useFileEditorAndFile();
 
     return (
         <div className="flex flex-col w-full text-white max-h-screen">
