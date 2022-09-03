@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { CodeEditor } from '../components/editor';
-import { FileExplorer } from '../components/file-export';
+import { FileExplorer } from '../components/file-explorer';
 
 const Home: NextPage = () => {
     return (

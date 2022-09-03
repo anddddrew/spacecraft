@@ -22,7 +22,7 @@ type DbInfo = {
 const dbInfoAtom = atom<DbInfo | undefined>(undefined);
 
 const openClass = `border-[E8198B] border-b-2`;
-const closedClass = 'border-black border-b-2';
+const closedClass = 'border-transparent border-b-2';
 
 const DbSetup = () => {
     const [, setDbInfo] = useAtom(dbInfoAtom);
@@ -68,16 +68,16 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    useTerminal('terminal', 'wss://h-production.up.railway.app/', '\r');
+    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', '\n');
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
     const dbCss = !termOpen ? openClass : closedClass;
     const setTab = (tab: CurrentTab) => () => setCurrentTab(tab);
-
+    fitAddon?.fit();
     return (
-        <div className="relative">
-            <div className="border-white/25 border-b  border-t flex  bg-zinc-900 text-xs">
+        <div className="relative ">
+            <div className="border-white/25 border-b border-t flex bg-zinc-900 text-xs">
                 <Button className={clsx('h-full px-4 py-2', termCss)} onClick={setTab(CurrentTab.terminal)}>
                     Terminal
                 </Button>
@@ -86,7 +86,7 @@ export function TerminalArea() {
                 </Button>
             </div>
             {!termOpen && <DatabaseArea />}
-            <div id="terminal" />
+            <div id="terminal" className="h-full" />
         </div>
     );
 }

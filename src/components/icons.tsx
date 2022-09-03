@@ -1,6 +1,6 @@
 const Icon = ({ src }: { src: string }) => (
     <picture className="flex">
-        <img src={'/icons/' + src + '.svg'} alt="" className="aspect-square w-4 mr-2 my-auto" />
+        <img src={'/icons/' + src + '.svg'} alt="" className="aspect-square m-w-4 w-4 mr-2 my-auto" />
     </picture>
 );
 
