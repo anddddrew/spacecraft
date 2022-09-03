@@ -1,1 +1,1 @@
-export type Folder = { path: string; name: string; open?: boolean; children?: Folder[] };
+export type Folder = { path: string; name: string; children?: Folder[] };

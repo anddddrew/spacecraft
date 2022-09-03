@@ -11,7 +11,54 @@ import { FileIcon, FolderLogo } from './icons';
 const fsAtom = atom<Folder>({
     name: 'root',
     path: '/',
+
+    children: [
+        {
+            name: 'README.md',
+            path: '/readme.md',
+        },
+        {
+            name: 'cover.png',
+            path: '/cover.png',
+        },
+        {
+            name: 'LICENSE.txt',
+            path: '/LICENSE.txt',
+        },
+        {
+            name: 'src',
+
+            path: '/src',
+            children: [
+                {
+                    name: 'index.tsx',
+                    path: '/src/index.tsx',
+                },
+                {
+                    name: 'button.tsx',
+                    path: '/src/button.tsx',
+                },
+                {
+                    name: 'cool-things',
+
+                    path: '/src/cool-things',
+                    children: [
+                        {
+                            name: 'very-cool.scss',
+                            path: '/src/cool-things/very-cool.scss',
+                        },
+                        {
+                            name: 'also-cool.tsx',
+                            path: '/src/cool-things/button.tsx',
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
 });
+
+const fodlerFoldingAtom = atom<Record<string, boolean>>({});
 
 const File = (file: Folder) => {
     const [currentFile, setCurrentFileAtom] = useAtom(currentFileAtom);
@@ -47,7 +94,7 @@ interface event {
 }
 const useFs = () => {
     const [fs, setFs] = useAtom(fsAtom);
-    console.log('aaaaa');
+
     useEffect(() => {
         console.log('bbbb');
         const ws = new WebSocket('wss://h-production.up.railway.app/');
@@ -66,6 +113,7 @@ const useFs = () => {
             console.log('ws opened fs');
 
             ws.addEventListener('message', handleMessage, {});
+            ws.send('');
         };
 
         ws.addEventListener('open', handleOpen, {});
@@ -79,20 +127,20 @@ const useFs = () => {
 };
 
 const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?: boolean; pathToFolder: string }) => {
-    const [, setFs] = useAtom(fsAtom);
+    const [folding, setFolding] = useAtom(fodlerFoldingAtom);
 
     const toggleFolder = () => {
-        setFs((prev: Folder) => {
+        setFolding((prev) => {
             const newFs = { ...prev };
-            const currentFolder = findFolder(folder.path, newFs);
-            if (currentFolder) {
-                currentFolder.open = !currentFolder.open;
-            }
+            newFs[folder.path] = !newFs[folder.path];
             return newFs;
         });
     };
 
-    const containerClassName = !hideName && folder.open && folder.children?.length ? 'border-l border-white/[.15]' : '';
+    const folderOpen = folding[folder.path] || folder.path === '/';
+    console.log('folderOpen', folderOpen);
+
+    const containerClassName = !hideName && folderOpen && folder.children?.length ? 'border-l border-white/[.15]' : '';
 
     const folders = folder.children?.filter((file) => !!file.children);
     const files = folder.children?.filter((file) => !file.children);
@@ -101,13 +149,13 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
         <div className={containerClassName}>
             {!hideName && (
                 <Button className="flex py-1 text-sm w-full" onClick={toggleFolder}>
-                    {!folder.open && <ChevronRightIcon className="mr-1" />}
-                    {folder.open && <ChevronDownIcon className="mr-1" />}
-                    <FolderLogo name={folder.name} open={folder.open} />
+                    {!folderOpen && <ChevronRightIcon className="mr-1" />}
+                    {folderOpen && <ChevronDownIcon className="mr-1" />}
+                    <FolderLogo name={folder.name} open={folderOpen} />
                     {folder.name}
                 </Button>
             )}
-            {folder.open && (
+            {folderOpen && (
                 <div className="pl-2">
                     {folders?.map((file) => (
                         <Folder key={file.path} folder={file} pathToFolder={pathToFolder + '.' + file.name} />
@@ -124,6 +172,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
 export function FileExplorer() {
     const [fs] = useAtom(fsAtom);
     useFs();
+    console.log(fs);
     return (
         <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono">
             <div className="flex  border-white/25 border-b mt-3 pb-3 px-3">

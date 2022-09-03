@@ -1,7 +1,7 @@
 const a = {
     name: 'root',
     path: '/',
-    open: true,
+
     children: [
         {
             name: 'README.md',
@@ -17,7 +17,7 @@ const a = {
         },
         {
             name: 'src',
-            open: true,
+
             path: '/src',
             children: [
                 {
@@ -30,7 +30,7 @@ const a = {
                 },
                 {
                     name: 'cool-things',
-                    open: true,
+
                     path: '/src/cool-things',
                     children: [
                         {
