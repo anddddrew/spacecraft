@@ -25,7 +25,7 @@ const termColors: ITheme = {
     cursor: '#29D398',
 };
 
-export const useTerminal = () => {
+export const useTerminal = (termId: string) => {
     const term = useRef<{ terminal?: Terminal; fitAddon?: FitAddon; webLinkAddon?: WebLinksAddon; wsMessage?: EventListener }>({});
 
     useEffect(() => {
@@ -39,7 +39,7 @@ export const useTerminal = () => {
 
         const ws = new WebSocket('wss://h-production.up.railway.app');
 
-        terminal.open(document.getElementById('terminal') ?? document.body);
+        terminal.open(document.getElementById(termId) ?? document.body);
         terminal.write('\r');
 
         terminal.onData((data) => ws.send(data));
