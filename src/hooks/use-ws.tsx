@@ -1,6 +1,5 @@
 import { atom, useAtomValue } from 'jotai';
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
 const wsAtom = atom<WebSocket | undefined>(undefined);
 
 let wsSet = false;
