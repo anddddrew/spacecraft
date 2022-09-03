@@ -62,13 +62,6 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
             terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
             terminal.onResize(() => term.current.fitAddon?.fit());
 
-            const handleOpen = () => {
-                console.log('ws opened');
-                terminal.write(initialCommand);
-            };
-
-            ws.addEventListener('open', handleOpen, {});
-
             const handleMessage = (msg: MessageEvent<string>) => {
                 const event: event = JSON.parse(msg.data);
                 if (event.type == 'termOut') {
@@ -76,7 +69,13 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
                 }
             };
 
-            ws.addEventListener('message', handleMessage, {});
+            const handleOpen = () => {
+                console.log('ws opened');
+                terminal.write(initialCommand + '\r\n');
+                ws.addEventListener('message', handleMessage, {});
+            };
+
+            ws.addEventListener('open', handleOpen, {});
 
             return () => {
                 terminal.dispose();

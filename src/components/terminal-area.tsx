@@ -11,8 +11,8 @@ enum DbType {
 }
 
 const dbCommand: Record<string, string> = {
-    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116\n',
-    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway\n',
+    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116',
+    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway',
 };
 
 type DbInfo = {
