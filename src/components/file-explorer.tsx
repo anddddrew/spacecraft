@@ -2,6 +2,7 @@ import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import { atom, useAtom } from 'jotai';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { currentFileAtom } from '../atoms';
 import { Button } from '../ds/button';
 import { Folder } from '../types/fs';
@@ -10,51 +11,6 @@ import { FileIcon, FolderLogo } from './icons';
 const fsAtom = atom<Folder>({
     name: 'root',
     path: '/',
-    open: true,
-    children: [
-        {
-            name: 'README.md',
-            path: '/readme.md',
-        },
-        {
-            name: 'cover.png',
-            path: '/cover.png',
-        },
-        {
-            name: 'LICENSE.txt',
-            path: '/LICENSE.txt',
-        },
-        {
-            name: 'src',
-            open: true,
-            path: '/src',
-            children: [
-                {
-                    name: 'index.tsx',
-                    path: '/src/index.tsx',
-                },
-                {
-                    name: 'button.tsx',
-                    path: '/src/button.tsx',
-                },
-                {
-                    name: 'cool-things',
-                    open: true,
-                    path: '/src/cool-things',
-                    children: [
-                        {
-                            name: 'very-cool.scss',
-                            path: '/src/cool-things/very-cool.scss',
-                        },
-                        {
-                            name: 'also-cool.tsx',
-                            path: '/src/cool-things/button.tsx',
-                        },
-                    ],
-                },
-            ],
-        },
-    ],
 });
 
 const File = (file: Folder) => {
@@ -84,6 +40,43 @@ function findFolder(path: string, folder: Folder): Folder | undefined {
         }
     }
 }
+
+interface event {
+    type: string;
+    data: string;
+}
+const useFs = () => {
+    const [fs, setFs] = useAtom(fsAtom);
+    console.log('aaaaa');
+    useEffect(() => {
+        console.log('bbbb');
+        const ws = new WebSocket('wss://h-production.up.railway.app/');
+
+        const handleMessage = (wsEvent: MessageEvent<string>) => {
+            const msg: event = JSON.parse(wsEvent.data);
+            console.log('message', msg);
+            if (msg.type !== 'tree') {
+                return;
+            }
+
+            setFs(JSON.parse(msg.data));
+        };
+
+        const handleOpen = () => {
+            console.log('ws opened fs');
+
+            ws.addEventListener('message', handleMessage, {});
+        };
+
+        ws.addEventListener('open', handleOpen, {});
+
+        return () => {
+            ws.close();
+            ws.removeEventListener('open', handleOpen, {});
+            ws.removeEventListener('message', handleMessage, {});
+        };
+    }, [setFs]);
+};
 
 const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?: boolean; pathToFolder: string }) => {
     const [, setFs] = useAtom(fsAtom);
@@ -130,7 +123,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
 
 export function FileExplorer() {
     const [fs] = useAtom(fsAtom);
-
+    useFs();
     return (
         <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono">
             <div className="flex  border-white/25 border-b mt-3 pb-3 px-3">
