@@ -3,7 +3,7 @@ import '@fontsource/fira-code';
 import Editor from '@monaco-editor/react';
 import { atom, useAtom } from 'jotai';
 import dynamic from 'next/dynamic';
-import { currentFileAtom, showTerminalAtom } from '../atoms';
+import { currentFileAtom } from '../atoms';
 
 const content = `
 import * as trpc from "@trpc/server";
@@ -43,10 +43,9 @@ export const createRouter = () => trpc.router<Context>();
 const editorContentAtom = atom<string | undefined>(undefined);
 
 const useFileEditorAndFile = () => {
-    const [showTerminal] = useAtom(showTerminalAtom);
     const [editorContent] = useAtom(editorContentAtom);
     const [currentFile] = useAtom(currentFileAtom);
-    return { currentFile, editorContent, showTerminal };
+    return { currentFile, editorContent };
 };
 
 const DynamicTerminal = dynamic(() => import('../components/terminal-area'), {
@@ -54,7 +53,7 @@ const DynamicTerminal = dynamic(() => import('../components/terminal-area'), {
 });
 
 export function CodeEditor() {
-    const { currentFile, showTerminal } = useFileEditorAndFile();
+    const { currentFile } = useFileEditorAndFile();
 
     return (
         <div className="flex flex-col w-full text-white max-h-screen">
@@ -70,7 +69,7 @@ export function CodeEditor() {
                     automaticLayout: true,
                 }}
             />
-            {showTerminal && <DynamicTerminal />}
+            <DynamicTerminal />
         </div>
     );
 }

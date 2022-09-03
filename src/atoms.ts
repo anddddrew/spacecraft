@@ -1,5 +1,10 @@
 import { atom } from 'jotai';
 import { File } from './types/fs';
 
-export const showTerminalAtom = atom<boolean>(true);
+export enum CurrentTab {
+    terminal = 'terminal',
+    database = 'database',
+}
+
+export const currentTermTabAtom = atom<CurrentTab>(CurrentTab.terminal);
 export const currentFileAtom = atom<File | undefined>(undefined);
