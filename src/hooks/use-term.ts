@@ -56,12 +56,6 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
             console.log('command is', initialCommand);
             const ws = new WebSocket(wsUrl);
 
-            terminal.open(document.getElementById(termId) ?? document.body);
-            terminal.write(initialCommand);
-
-            terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
-            terminal.onResize(() => term.current.fitAddon?.fit());
-
             const handleMessage = (msg: MessageEvent<string>) => {
                 const event: event = JSON.parse(msg.data);
                 if (event.type == 'termOut') {
@@ -71,8 +65,11 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
 
             const handleOpen = () => {
                 console.log('ws opened');
-                terminal.write(initialCommand + '\r\n');
+                terminal.open(document.getElementById(termId) ?? document.body);
                 ws.addEventListener('message', handleMessage, {});
+                terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
+                ws.send(JSON.stringify({ type: 'termIn', data: initialCommand + '\r'}));
+                terminal.onResize(() => term.current.fitAddon?.fit());
             };
 
             ws.addEventListener('open', handleOpen, {});
