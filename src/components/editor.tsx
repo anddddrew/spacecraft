@@ -3,7 +3,7 @@ import '@fontsource/fira-code';
 import Editor from '@monaco-editor/react';
 import { atom, useAtom } from 'jotai';
 import { currentFileAtom, showTerminalAtom } from '../atoms';
-import { Terminal } from './terminal';
+import dynamic from "next/dynamic"
 
 const content = `
 import * as trpc from "@trpc/server";
@@ -49,6 +49,10 @@ const useFileEditorAndFile = () => {
     return { currentFile, editorContent, showTerminal };
 };
 
+const DynamicTerminal = dynamic(() => import('../components/terminal-area'), {
+  ssr: false,
+})
+
 export function CodeEditor() {
     const { currentFile, editorContent, showTerminal } = useFileEditorAndFile();
 
@@ -66,7 +70,7 @@ export function CodeEditor() {
                     automaticLayout: true,
                 }}
             />
-            {showTerminal && <Terminal />}
+            {showTerminal && <DynamicTerminal />}
         </div>
     );
 }
