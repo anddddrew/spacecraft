@@ -57,8 +57,8 @@ export function CodeEditor() {
     const { currentFile } = useFileEditorAndFile();
 
     return (
-        <div className="flex flex-col w-full text-white max-h-screen">
-            <div className="flex  border-white/25 border-b w-full justify-between">
+        <div className="w-full text-white h-screen">
+            <div className="flex border-white/25 border-b w-full justify-between">
                 <div className="flex px-4 py-2">
                     {currentFile && <FileIcon name={currentFile?.name} />} <div className="my-auto">{currentFile?.name ?? '​'} </div>
                 </div>
@@ -68,7 +68,7 @@ export function CodeEditor() {
             <Editor
                 defaultValue={content ?? ''}
                 path={currentFile?.path}
-                height="80vh"
+                height="calc(70vh)"
                 theme="hc-black"
                 options={{
                     automaticLayout: true,

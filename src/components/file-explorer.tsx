@@ -3,17 +3,13 @@ import clsx from 'clsx';
 import { atom, useAtom } from 'jotai';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import { currentFileAtom } from '../atoms';
+import { currentFileAtom, fsAtom } from '../atoms';
 import { Button } from '../ds/button';
-import { Folder } from '../types/fs';
+import { useWs } from '../hooks/use-ws';
+import { event, Folder } from '../types/fs';
 import { FileIcon, FolderLogo } from './icons';
 
-const fsAtom = atom<Folder>({
-    name: 'root',
-    path: '/',
-});
-
-const fodlerFoldingAtom = atom<Record<string, boolean>>({});
+const folderFoldingAtom = atom<Record<string, boolean>>({});
 
 const File = (file: Folder) => {
     const [currentFile, setCurrentFileAtom] = useAtom(currentFileAtom);
@@ -30,59 +26,8 @@ const File = (file: Folder) => {
     );
 };
 
-function findFolder(path: string, folder: Folder): Folder | undefined {
-    if (folder.path === path) {
-        return folder as Folder;
-    } else {
-        for (const subFolder of folder.children ?? []) {
-            const foundFolder = findFolder(path, subFolder);
-            if (foundFolder) {
-                return foundFolder;
-            }
-        }
-    }
-}
-
-interface event {
-    type: string;
-    data: string;
-}
-const useFs = () => {
-    const [fs, setFs] = useAtom(fsAtom);
-
-    useEffect(() => {
-        console.log('bbbb');
-        const ws = new WebSocket('wss://h-production.up.railway.app/');
-
-        const handleMessage = (wsEvent: MessageEvent<string>) => {
-            const msg: event = JSON.parse(wsEvent.data);
-            console.log('message', msg);
-            if (msg.type !== 'tree') {
-                return;
-            }
-
-            setFs(JSON.parse(msg.data));
-        };
-
-        const handleOpen = () => {
-            console.log('ws opened fs');
-
-            ws.addEventListener('message', handleMessage, {});
-            ws.send('');
-        };
-
-        ws.addEventListener('open', handleOpen, {});
-
-        return () => {
-            ws.close();
-            ws.removeEventListener('open', handleOpen, {});
-            ws.removeEventListener('message', handleMessage, {});
-        };
-    }, [setFs]);
-};
-
 const Folder = ({ folder, hideName, pathToFolder, topLevel }: { folder: Folder; hideName?: boolean; pathToFolder: string; topLevel?: true }) => {
-    const [folding, setFolding] = useAtom(fodlerFoldingAtom);
+    const [folding, setFolding] = useAtom(folderFoldingAtom);
 
     const toggleFolder = () => {
         setFolding((prev) => {
@@ -93,7 +38,6 @@ const Folder = ({ folder, hideName, pathToFolder, topLevel }: { folder: Folder; 
     };
 
     const folderOpen = folding[folder.path] || topLevel;
-    console.log('folderOpen', folderOpen);
 
     const containerClassName = !hideName && folderOpen && folder.children?.length ? 'border-l border-white/[.15]' : '';
 
@@ -124,10 +68,33 @@ const Folder = ({ folder, hideName, pathToFolder, topLevel }: { folder: Folder; 
     );
 };
 
+const useFs = () => {
+    const ws = useWs();
+    const [fs, setFs] = useAtom(fsAtom);
+    useEffect(() => {
+        if (!ws) {
+            return;
+        }
+        const handleMessage = (wsEvent: MessageEvent<string>) => {
+            const msg: event = JSON.parse(wsEvent.data);
+            if (msg.type !== 'tree') {
+                return;
+            }
+            setFs(() => JSON.parse(msg.data));
+        };
+        ws.addEventListener('message', handleMessage, {});
+
+        return () => {
+            ws?.removeEventListener('message', handleMessage);
+        };
+    }, [setFs, ws]);
+
+    return fs;
+};
+
 export function FileExplorer() {
-    const [fs] = useAtom(fsAtom);
-    useFs();
-    console.log(fs);
+    const fs = useFs();
+
     return (
         <div className="h-screen min-w-80 w-80 bg-zinc-900 border-white/25 border-r text-white text-xs font-mono">
             <div className="flex  border-white/25 border-b mt-3 pb-3 px-3">
