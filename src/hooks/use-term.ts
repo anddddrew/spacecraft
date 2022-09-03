@@ -3,6 +3,9 @@ import { ITheme, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
+// hop auth login --token
+// hop deploy
+
 const termColors: ITheme = {
     background: '#000',
     foreground: '#E8198B',
@@ -68,7 +71,7 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
                 terminal.open(document.getElementById(termId) ?? document.body);
                 ws.addEventListener('message', handleMessage, {});
                 terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
-                ws.send(JSON.stringify({ type: 'termIn', data: initialCommand + '\r'}));
+                ws.send(JSON.stringify({ type: 'termIn', data: initialCommand + '\r' }));
                 terminal.onResize(() => term.current.fitAddon?.fit());
             };
 
