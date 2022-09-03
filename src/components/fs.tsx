@@ -1,4 +1,4 @@
-const a = {
+export const a = {
     name: 'root',
     path: '/',
 

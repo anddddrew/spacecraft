@@ -11,51 +11,6 @@ import { FileIcon, FolderLogo } from './icons';
 const fsAtom = atom<Folder>({
     name: 'root',
     path: '/',
-
-    children: [
-        {
-            name: 'README.md',
-            path: '/readme.md',
-        },
-        {
-            name: 'cover.png',
-            path: '/cover.png',
-        },
-        {
-            name: 'LICENSE.txt',
-            path: '/LICENSE.txt',
-        },
-        {
-            name: 'src',
-
-            path: '/src',
-            children: [
-                {
-                    name: 'index.tsx',
-                    path: '/src/index.tsx',
-                },
-                {
-                    name: 'button.tsx',
-                    path: '/src/button.tsx',
-                },
-                {
-                    name: 'cool-things',
-
-                    path: '/src/cool-things',
-                    children: [
-                        {
-                            name: 'very-cool.scss',
-                            path: '/src/cool-things/very-cool.scss',
-                        },
-                        {
-                            name: 'also-cool.tsx',
-                            path: '/src/cool-things/button.tsx',
-                        },
-                    ],
-                },
-            ],
-        },
-    ],
 });
 
 const fodlerFoldingAtom = atom<Record<string, boolean>>({});
@@ -126,7 +81,7 @@ const useFs = () => {
     }, [setFs]);
 };
 
-const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?: boolean; pathToFolder: string }) => {
+const Folder = ({ folder, hideName, pathToFolder, topLevel }: { folder: Folder; hideName?: boolean; pathToFolder: string; topLevel?: true }) => {
     const [folding, setFolding] = useAtom(fodlerFoldingAtom);
 
     const toggleFolder = () => {
@@ -137,7 +92,7 @@ const Folder = ({ folder, hideName, pathToFolder }: { folder: Folder; hideName?:
         });
     };
 
-    const folderOpen = folding[folder.path] || folder.path === '/';
+    const folderOpen = folding[folder.path] || topLevel;
     console.log('folderOpen', folderOpen);
 
     const containerClassName = !hideName && folderOpen && folder.children?.length ? 'border-l border-white/[.15]' : '';
@@ -182,7 +137,7 @@ export function FileExplorer() {
                 SpaceShip
             </div>
             <div className=" px-2">
-                <Folder folder={fs} hideName={true} pathToFolder="" />
+                <Folder folder={fs} hideName={true} pathToFolder="" topLevel={true} />
             </div>
         </div>
     );
