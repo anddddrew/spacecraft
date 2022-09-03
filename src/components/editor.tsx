@@ -64,8 +64,9 @@ export function CodeEditor() {
             <Editor
                 defaultValue={content ?? ''}
                 path={currentFile?.path}
+                height="80vh"
+                theme="hc-black"
                 options={{
-                    theme: 'hc-black',
                     automaticLayout: true,
                 }}
             />
