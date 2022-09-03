@@ -103,9 +103,7 @@ export function FileExplorer() {
                 </div>
                 SpaceShip
             </div>
-            <div className=" px-2">
-                <Folder folder={fs} hideName={true} pathToFolder="" topLevel={true} />
-            </div>
+            <div className=" px-2">{fs && <Folder folder={fs} hideName={true} pathToFolder="" topLevel={true} />}</div>
         </div>
     );
 }
