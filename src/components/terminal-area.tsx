@@ -1,15 +1,32 @@
 import clsx from 'clsx';
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import 'xterm/css/xterm.css';
 import { CurrentTab, currentTermTabAtom } from '../atoms';
 import { Button } from '../ds/button';
 import { useTerminal } from '../hooks/use-term';
 
+enum DbType {
+    Postgres = 'postgres',
+    Mysql = 'mysql',
+}
+
+type DbInfo = {
+    type: DbType;
+};
+
+const dbInfoAtom = atom<DbInfo | undefined>(undefined);
+
 const openClass = `border-[E8198B] border-b-2`;
 const closedClass = 'border-black border-b-2';
 
+const DbSetup = () => {
+    return <div className="flex flex-col w-full h-full">Setup db </div>;
+};
+
 const DatabaseArea = () => {
-    return <div className="absolute w-full h-full bg-zinc-900 z-10">db</div>;
+    const [dbInfo] = useAtom(dbInfoAtom);
+
+    return <div className="absolute w-full h-[calc(100%-36px)] bg-zinc-900 z-10"></div>;
 };
 
 export function TerminalArea() {
@@ -22,7 +39,7 @@ export function TerminalArea() {
     const setTab = (tab: CurrentTab) => () => setCurrentTab(tab);
 
     return (
-        <div className="relative h-1/3">
+        <div className="relative">
             <div className="border-white/25 border-b  border-t flex  bg-zinc-900 text-xs">
                 <Button className={clsx('h-full px-4 py-2', termCss)} onClick={setTab(CurrentTab.terminal)}>
                     Terminal
