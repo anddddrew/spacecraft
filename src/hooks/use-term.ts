@@ -36,6 +36,7 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
         fitAddon?: FitAddon;
         webLinkAddon?: WebLinksAddon;
         wsMessage?: EventListener;
+        onOpen?: EventListener;
     }>({});
 
     useEffect(() => {
@@ -60,12 +61,21 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
 
             terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
             terminal.onResize(() => term.current.fitAddon?.fit());
+
+            const handleOpen = () => {
+                console.log('ws opened');
+                terminal.write(initialCommand);
+            };
+
+            ws.addEventListener('open', handleOpen, {});
+
             const handleMessage = (msg: MessageEvent<string>) => {
                 const event: event = JSON.parse(msg.data);
                 if (event.type == 'termOut') {
                     terminal?.write(event.data);
                 }
             };
+
             ws.addEventListener('message', handleMessage, {});
 
             return () => {
@@ -73,6 +83,7 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
                 fitAddon.dispose();
                 ws.close();
 
+                ws.removeEventListener('open', handleOpen, {});
                 ws.removeEventListener('message', handleMessage, {});
             };
         }
