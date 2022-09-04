@@ -68,7 +68,12 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', '\r');
+    const repo = window.location.hash.substr(1);
+    let initCmd = `\r`
+    if(repo){
+        initCmd = initCmd.concat("git clone ", repo, "\r")
+    }
+    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', initCmd);
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
