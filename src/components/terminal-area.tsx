@@ -11,8 +11,8 @@ enum DbType {
 }
 
 const dbCommand: Record<string, string> = {
-    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116',
-    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway',
+    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116\r',
+    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway\r',
 };
 
 type DbInfo = {
@@ -68,7 +68,7 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', '\n');
+    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', '\r');
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;

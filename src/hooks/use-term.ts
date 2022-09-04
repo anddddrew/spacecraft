@@ -66,7 +66,7 @@ export const useTerminal = (termId: string, wsUrl: string, initialCommand: strin
                 terminal.open(document.getElementById(termId) ?? document.body);
                 ws.addEventListener('message', handleMessage, {});
                 terminal.onData((data) => ws.send(JSON.stringify({ type: 'termIn', data: data })));
-                ws.send(JSON.stringify({ type: 'termIn', data: initialCommand + '\r' }));
+                ws.send(JSON.stringify({ type: 'termIn', data: initialCommand }));
                 terminal.onResize(() => term.current.fitAddon?.fit());
             };
 
