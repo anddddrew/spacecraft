@@ -9,9 +9,26 @@ const fileIcons: Record<string, string> = {
     tsx: 'react_ts',
     jsx: 'react',
     scss: 'sass',
+    ts: 'typescript',
+    txt: 'document',
+    mjs: 'javascript',
+    css: 'css',
+    json: 'json',
+    png: 'image',
+    ico: 'image',
 };
 const folderIcons: Record<string, string> = {
     src: 'folder-src',
+};
+
+const wholeFileIcons: Record<string, string> = {
+    'package.json': 'nodejs',
+    '.eslintrc.json': 'eslint',
+    '.gitignore': 'git',
+    'next.config.mjs': 'next',
+    'postcss.config.cjs': 'postcss',
+    'tailwind.config.cjs': 'tailwindcss',
+    'tsconfig.json': 'tsconfig',
 };
 
 export const FolderLogo = ({ name, open }: { name: string; open?: boolean }) => {
@@ -26,7 +43,7 @@ export const FolderLogo = ({ name, open }: { name: string; open?: boolean }) => 
 
 export const FileIcon = ({ name }: { name: string }) => {
     const fileExt = name.split('.').pop();
-    const fileIcon = fileIcons[fileExt ?? ''] ?? 'file';
+    const fileIcon = wholeFileIcons[name] ?? fileIcons[fileExt ?? ''] ?? 'file';
 
     return <Icon src={fileIcon} />;
 };

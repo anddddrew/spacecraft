@@ -85,7 +85,7 @@ export function CodeEditor() {
             return () => document.removeEventListener('keydown', handleKeyDown, false);
         }
         // add a save file keybind
-    }, [m]);
+    }, [currentFile, m, ws]);
 
     return (
         <div className="w-full text-white h-screen">
@@ -99,7 +99,7 @@ export function CodeEditor() {
             <Editor
                 defaultValue={content ?? ''}
                 path={currentFile?.path}
-                height="calc(70vh)"
+                height="70vh"
                 theme="hc-black"
                 options={{
                     automaticLayout: true,
