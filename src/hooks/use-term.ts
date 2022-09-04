@@ -3,6 +3,9 @@ import { ITheme, Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 
+// hop auth login --token
+// hop deploy
+
 const termColors: ITheme = {
     background: '#000',
     foreground: '#E8198B',
