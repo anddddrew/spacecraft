@@ -19,6 +19,11 @@ const fileIcons: Record<string, string> = {
 };
 const folderIcons: Record<string, string> = {
     src: 'folder-src',
+    env: 'folder-environment',
+    pages: 'folder-views',
+    public: 'folder-public',
+    styles: 'folder-css',
+    '.vscode': 'folder-vscode',
 };
 
 const wholeFileIcons: Record<string, string> = {
