@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FileIcon } from '@/components/icons';
 import '@fontsource/fira-code';
 import Editor, { useMonaco } from '@monaco-editor/react';
