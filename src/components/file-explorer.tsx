@@ -47,7 +47,7 @@ const Folder = ({ folder, hideName, pathToFolder, topLevel }: { folder: Folder; 
     return (
         <div className={containerClassName}>
             {!hideName && (
-                <Button className="flex py-1 text-sm w-full" onClick={toggleFolder}>
+                <Button className="flex py-1 text-sm w-max" onClick={toggleFolder}>
                     {!folderOpen && <ChevronRightIcon className="mr-1" />}
                     {folderOpen && <ChevronDownIcon className="mr-1" />}
                     <FolderLogo name={folder.name} open={folderOpen} />
@@ -103,7 +103,9 @@ export function FileExplorer() {
                 </div>
                 SpaceShip
             </div>
-            <div className=" px-2">{fs && <Folder folder={fs} hideName={true} pathToFolder="" topLevel={true} />}</div>
+            <div>
+                <div className="min-w-80 w-max overflow-x px-2">{fs && <Folder folder={fs} hideName={true} pathToFolder="" topLevel={true} />}</div>
+            </div>
         </div>
     );
 }

@@ -1,12 +1,22 @@
 import { AlertDialog, Content, Overlay, Portal, Trigger } from '@radix-ui/react-alert-dialog';
 import { atom, useAtom, useAtomValue } from 'jotai';
 import { Logo } from '../ds/logo';
-import { useWs } from '../hooks/use-ws';
+import { useWs } from '@/hooks/use-ws';
 
 const deetsOpenAtom = atom(false);
 const tokenAtom = atom('');
 const deploy = async ({ token, ws }: { token: string; ws: WebSocket }) => {
     ws.send(JSON.stringify({ type: 'termIn', data: `\rhop auth login --token ${token} && hop link && hop deploy\r` }));
+};
+
+const deploy = async (token: string) => {
+    const ws = useWs()
+    if (ws) {
+        const handleOpen = () => {
+            ws.send(JSON.stringify({ "type": "termIn", "data": `hop auth login --token ${token} && hop projects switch && hop deploy` }));
+        };
+        ws.addEventListener('open', handleOpen, {});
+    }
 };
 
 const DeployBtn = () => {
@@ -55,7 +65,6 @@ const DeetsOverlay = () => {
                             className="bg-transparent text-white border-white/25 border rounded-md w-1/2 mx-auto mt-2"
                             onChange={(e) => setToken(e.target.value)}
                         />
-
                         <div className="mx-auto mt-4 cursor-pointer">
                             <DeployBtn />
                         </div>
