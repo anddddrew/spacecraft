@@ -11,8 +11,8 @@ enum DbType {
 }
 
 const dbCommand: Record<string, string> = {
-    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116',
-    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway',
+    redis: 'redis-cli -u redis://default:wzVWFk5ZiNpD8z1Ox8zQ@containers-us-west-80.railway.app:7116\r',
+    postgres: 'PGPASSWORD=rIgYdOHEckAGFSQyiQqj psql -h containers-us-west-21.railway.app -U postgres -p 6074 -d railway\r',
 };
 
 type DbInfo = {
@@ -22,7 +22,7 @@ type DbInfo = {
 const dbInfoAtom = atom<DbInfo | undefined>(undefined);
 
 const openClass = `border-[E8198B] border-b-2`;
-const closedClass = 'border-black border-b-2';
+const closedClass = 'border-transparent border-b-2';
 
 const DbSetup = () => {
     const [, setDbInfo] = useAtom(dbInfoAtom);
@@ -68,16 +68,21 @@ const DatabaseArea = () => {
 
 export function TerminalArea() {
     const [currentTab, setCurrentTab] = useAtom(currentTermTabAtom);
-    useTerminal('terminal', 'wss://h-production.up.railway.app/', '\n');
+    const repo = window.location.hash.substr(1);
+    let initCmd = `\r`
+    if(repo){
+        initCmd = initCmd.concat("git clone ", repo, "\r")
+    }
+    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', initCmd);
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
     const dbCss = !termOpen ? openClass : closedClass;
     const setTab = (tab: CurrentTab) => () => setCurrentTab(tab);
-
+    fitAddon?.fit();
     return (
-        <div className="relative">
-            <div className="border-white/25 border-b  border-t flex  bg-zinc-900 text-xs">
+        <div className="relative ">
+            <div className="border-white/25 border-b border-t flex bg-zinc-900 text-xs">
                 <Button className={clsx('h-full px-4 py-2', termCss)} onClick={setTab(CurrentTab.terminal)}>
                     Terminal
                 </Button>
@@ -86,7 +91,7 @@ export function TerminalArea() {
                 </Button>
             </div>
             {!termOpen && <DatabaseArea />}
-            <div id="terminal" />
+            <div id="terminal" className="h-full" />
         </div>
     );
 }
