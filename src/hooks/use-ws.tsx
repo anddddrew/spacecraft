@@ -7,7 +7,7 @@ let wsSet = false;
 wsAtom.onMount = (setAtom) => {
     if (!wsSet && typeof window !== 'undefined') {
         wsSet = true;
-        const ws = new WebSocket('wss:/h-production.up.railway.app/');
+        const ws = new WebSocket('wss://example.com/');
         ws.onopen = () => {
             setAtom(ws);
         };

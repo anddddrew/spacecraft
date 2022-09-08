@@ -51,7 +51,7 @@ const DbSetup = () => {
 const DbTerm = () => {
     const [dbInfo] = useAtom(dbInfoAtom);
 
-    useTerminal('db-term', 'wss://database-h-production.up.railway.app/', dbCommand[dbInfo?.type ?? '']);
+    useTerminal('db-term', 'wss://example.com/', dbCommand[dbInfo?.type ?? '']);
 
     return <div id="db-term"></div>;
 };
@@ -73,7 +73,7 @@ export function TerminalArea() {
     if(repo){
         initCmd = initCmd.concat("git clone ", repo, "\r")
     }
-    const { fitAddon } = useTerminal('terminal', 'wss://h-production.up.railway.app/', initCmd);
+    const { fitAddon } = useTerminal('terminal', 'wss://example.com/', initCmd);
 
     const termOpen = currentTab === CurrentTab.terminal;
     const termCss = termOpen ? openClass : closedClass;
