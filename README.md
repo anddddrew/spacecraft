@@ -1,5 +1,11 @@
 # Spacecraft - code, create and hop together.
 
+## hi
+
+I am forking this to make my own modifications/deploy it on my own server.
+
+I do not take credit for this project/idea.
+
 ## Inspiration
 Cloud developer environments are the new cool. Services like Gitpod & Github Codespaces have helped save countless number of hours required to configure developer environments. We are absolute fan of their products but they lack the social element. Imagine Codespaces with Figma-like multiplayer, That's exactly what spacecraft is all about!
 
